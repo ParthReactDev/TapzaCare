@@ -1,0 +1,61 @@
+appId: com.tapza
+---
+# ====================================================
+# Maestro End-to-End Test Suite: Tapza Healthcare Flow
+# 1. Boot & SplashScreen transition
+# 2. Config-driven Home feed loading (GET /config)
+# 3. Switching runtime config (Normal vs Diwali)
+# 4. Doctor booking flow with slot selection (GET /slots)
+# 5. Optimistic Booking confirmation (POST /bookings -> 201)
+# 6. Prescriptions tab & marking medicine dose taken
+# ====================================================
+
+- launchApp:
+    clearState: true
+
+# 1. Verify Splash Screen
+- assertVisible: "TAPZA"
+- tapOn: "Get Started →"
+
+# 2. Verify Home Screen loaded from GET /config
+- assertVisible: "TAPZA"
+- assertVisible: "🌿 Standard Care"
+- assertVisible: "Namaskaram, Alex 👋"
+
+# 3. Test Runtime Config Switching (Normal -> Diwali Dhamaka)
+- tapOn: "Switch to Diwali 🪔"
+- assertVisible: "🪔 Diwali Dhamaka"
+- assertVisible: "Happy Diwali! 🪔 Deepavali Subhakankshalu"
+
+# 4. Switch back to Normal Day Config
+- tapOn: "Switch to Normal"
+- assertVisible: "🌿 Standard Care"
+
+# 5. Test Doctor Booking Flow
+- scroll
+- assertVisible: "Dr. K. S. Rao"
+- tapOn: "Book Slot"
+
+# 6. Booking Bottom Sheet (Pick Slot & Confirm)
+- assertVisible: "Schedule Appointment"
+- assertVisible: "1. Select Date"
+- assertVisible: "2. Pick Available Slot"
+- tapOn: "10:30 AM"
+- tapOn: "Confirm (POST /bookings)"
+
+# 7. Verify Success Celebration Animation & Receipt
+- assertVisible: "Booking Confirmed! (201 Created)"
+- assertVisible: "Dr. K. S. Rao"
+- tapOn: "Back to Home"
+
+# 8. Navigate to Medicines (Prescriptions) Tab
+- tapOn: "Medicines"
+- assertVisible: "Prescriptions"
+- assertVisible: "Today's Medication Schedule"
+
+# 9. Open Prescription & Mark Dose as Taken
+- tapOn: "Dr. K. S. Rao"
+- assertVisible: "Daily Dose Schedule"
+- assertVisible: "Telmisartan 40mg"
+- tapOn: "Mark Taken"
+- assertVisible: "✓ Taken"
